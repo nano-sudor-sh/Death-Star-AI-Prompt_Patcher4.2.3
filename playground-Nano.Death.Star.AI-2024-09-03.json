@@ -1,0 +1,47 @@
+{
+  "type": "playground-export",
+  "version": "1.0.0",
+  "fileName": "playground-Nano✨Death✨Star✨AI-2024-09-03.json",
+  "name": "Nano✨Death✨Star✨AI",
+  "createdAt": 1725374971426,
+  "snapshots": [],
+  "scripts": [
+    {
+      "name": "default",
+      "snippet": "\n// Import the additional functions library\nlocal f = import \"functions\";\n\n{\n  id: f.getExecutionId()\n}\n\n",
+      "errorMessage": ""
+    },
+    {
+      "name": "script #1",
+      "snippet": "// script #1\n\n// Import the additional functions library\nlocal f = import \"functions\";\n\n{\n  id: f.getExecutionId(),\n}\n\n",
+      "errorMessage": ""
+    }
+  ],
+  "extVars": [
+    {
+      "name": "SalesforceTriggerCdcPayload",
+      "type": "json",
+      "value": "{\n  \"Origin\": \"New\",\n  \"Status\": \"New\",\n  \"LastModifiedDate\": \"2024-02-16T08:39:00.000Z\",\n  \"Priority\": \"Medium\",\n  \"IsClosed\": false,\n  \"Subject\": \"Derelict Vehicle\",\n  \"OwnerId\": \"0055g00000EjXpZAAV\",\n  \"CreatedById\": \"0055g00000EjXpZAAV\",\n  \"IsEscalated\": false,\n  \"CreatedDate\": \"2024-02-16T08:39:00.000Z\",\n  \"CaseNumber\": \"00001074\",\n  \"LastModifiedById\": \"0055g00000EjXpZAAV\"\n}"
+    },
+    {
+      "name": "SalesforceTriggerCdcChangeEventHeader",
+      "type": "json",
+      "value": "{\n  \"commitNumber\": 1.095037478146E12,\n  \"commitUser\": \"0055g00000EjXpZAAV\",\n  \"sequenceNumber\": 1.0,\n  \"entityName\": \"Case\",\n  \"changeType\": \"CREATE\",\n  \"changedFields\": [],\n  \"changeOrigin\": \"com/salesforce/api/soap/56.0\",\n  \"transactionKey\": \"0001186a-2a63-cc7b-618d-141a6eaee367\",\n  \"commitTimestamp\": 1.70807274E12\n}"
+    },
+    {
+      "name": "SalesforceTriggerReplayId",
+      "type": "integer",
+      "value": "21859552"
+    },
+    {
+      "name": "SalesforceTriggerCdcRecordId",
+      "type": "string",
+      "value": "5005g00000qx4l3AAA"
+    },
+    {
+      "name": "SalesforceTriggerSchemaId",
+      "type": "string",
+      "value": "kW2URyMwGVKlPp6KQ7L__Q"
+    }
+  ]
+}

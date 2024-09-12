@@ -1,0 +1,32 @@
+echo -e $USER_SECRETS_JSON | jq 'del(.[] |
+    select(.value=="GitHub" or .value=="noreply@github.com" or .value=="https://github.com" or .value=="https://api.github.com" or .value=="https://api.github.com/graphql" or .value=="nano-sudor-sh/NanoDeathStarAI" or .value=="" or .value==null))' |
+    jq 'unique_by(.value)' | jq .[] | jq '.value[]? // .value?' |jq -r \"::add-mask::\"+'.?'
+
+    umount -f /mnt
+  set -exu pipefall
+  # Download and extract agent
+  mkdir -p /.codespaces/agent/bin
+  cd /.codespaces/agent/bin
+  FIRST_LOCATION=($TARGET_VSCS_LOCATIONS)
+  AGENT_DOWNLOAD_URL="https://api.github.com/$INTERNAL_URL/nano-sudor-sh/NanoDeathStarAI/agent/download?$TARGET_LOCATION_KEY=$FIRST_LOCATION&workflow_run_id=$CODESPACES_GITHUB__WORKFLOWRUNID&$TARGET_KEY=$CODESPACES_GITHUB__VSCSTARGET&$TARGET_URL_KEY=${CODESPACES_GITHUB__VSCSTARGETURL-}"
+  curl --location $AGENT_DOWNLOAD_URL           --header "Authorization: token $CODESPACES_GITHUB__APITOKEN"           --output tmp.zip
+  unzip -q tmp.zip && rm tmp.zip
+  # Install agent
+  containerTmp=/mnt/containerTmp
+  mkdir -p $containerTmp
+  chmod o+rwt $containerTmp
+  setfacl -dR -m o::rw $containerTmp
+  codespacesSharedFolder=~/.codespaces/shared
+  mkdir -p $codespacesSharedFolder
+  chmod o+rw $codespacesSharedFolder
+  setfacl -dR -m o::rw $codespacesSharedFolder
+  chmod +x install_codespaces_agent.sh
+  ./install_codespaces_agent.sh
+  # Make copy of codespaces agent to mount
+  mkdir -p /.codespaces/agent/mount
+  cp -a /.codespaces/agent/bin/. /.codespaces/agent/mount
+
+  # Create
+  /.codespaces/agent/bin/codespaces prebuild create --repo-url $REPO_URL_WITHOUT_BRANCH --repo-name-no-owner $REPO_NAME_WITHOUT_OWNER --branch 5-nanodeathstarai --commit ac6bf6d2cf85ecf4e0d37719c8afb490d787adee --config-id $CONFIGURATION_ID --user-secrets-env USER_SECRETS_JSON --features-env FEATURE_FLAGS_JSON
+
+  

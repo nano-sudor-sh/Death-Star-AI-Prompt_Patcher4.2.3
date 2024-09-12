@@ -1,0 +1,41 @@
+{
+  "image": "kalilinux/kali-rolling:latest"
+}
+
+{
+  "image": "[redacted]",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.cpptools-extension-pack"
+      ],
+      "settings": {
+        "cmake.cmakePath": "${env:SDK_NATIVE_SYSROOT}/usr/bin/cmake"
+      }
+    }
+  }
+}
+
+umount -f /mnt
+  set -exu pipefall
+  # Download and extract agent
+  mkdir -p /.codespaces/agent/bin
+  cd /.codespaces/agent/bin
+  FIRST_LOCATION=($TARGET_VSCS_LOCATIONS)
+  AGENT_DOWNLOAD_URL="https://api.github.com/$INTERNAL_URL/nano-sudor-sh/NanoDeathStarAI/agent/download?$TARGET_LOCATION_KEY=$FIRST_LOCATION&workflow_run_id=$CODESPACES_GITHUB__WORKFLOWRUNID&$TARGET_KEY=$CODESPACES_GITHUB__VSCSTARGET&$TARGET_URL_KEY=${CODESPACES_GITHUB__VSCSTARGETURL-}"
+  curl --location $AGENT_DOWNLOAD_URL           --header "Authorization: token $CODESPACES_GITHUB__APITOKEN"           --output tmp.zip
+  unzip -q tmp.zip && rm tmp.zip
+  # Install agent
+  containerTmp=/mnt/containerTmp
+  mkdir -p $containerTmp
+  chmod o+rwt $containerTmp
+  setfacl -dR -m o::rw $containerTmp
+  codespacesSharedFolder=~/.codespaces/shared
+  mkdir -p $codespacesSharedFolder
+  chmod o+rw $codespacesSharedFolder
+  setfacl -dR -m o::rw $codespacesSharedFolder
+  chmod +x install_codespaces_agent.sh
+  ./install_codespaces_agent.sh
+  # Make copy of codespaces agent to mount
+  mkdir -p /.codespaces/agent/mount
+  cp -a /.codespaces/agent/bin/. /.codespaces/agent/mount

@@ -1,0 +1,140 @@
+# To get started with Dependabot version updates, you'll need to specify which
+# package ecosystems to update and where the package manifests are located.
+# Please see the documentation for all configuration options:
+# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+
+version: 2
+updates:
+  - package-ecosystem: "" # See documentation for possible values
+    directory: "/" # Location of package manifests
+    schedule:
+      interval: "weekly"
+
+
+{
+    "version": "0.2.0",
+    "configurations": [
+        
+        {
+            "name": "(gdb) 启动",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "",
+            "args": [],
+            "stopAtEntry": true,
+            "cwd": "${workspaceRoot}",
+            "externalConsole": true,
+            "environment": [],
+            "MIMode": "gdb",
+            "miDebuggerPath": "",
+            "miDebuggerServerAddress": "",
+            "setupCommands": [
+                {
+                    "description": "endlian little",
+                    "text": "set endian little",
+                    "ignoreFailures": false
+                },
+                {
+                    "text": "target remote 50.50.1.95:50000",
+                    "description": "connect to target",
+                    "ignoreFailures": false
+                },
+                {
+                    "description": "monitor reset",
+                    "text": "monitor reset",
+                    "ignoreFailures": false
+                },
+                {
+                    "description": "monitor halt",
+                    "text": "monitor halt",
+                    "ignoreFailures": false
+                },
+                {
+                    "description": "file",
+                    "text": "-file-exec-and-symbols \"\"",
+                    "ignoreFailures": false
+                },
+                {
+                    "description": "load file",
+                    "text": "load",
+                    "ignoreFailures": false
+                },
+                {
+                    "description": "break main",
+                    "text": "break main",
+                    "ignoreFailures": false
+                }
+            ],
+            "targetArchitecture": "mips"
+        }
+    ]
+}
+
+import json
+import os
+
+def test_debug_configuration():
+    # Test case 1: Check if the configuration file is in JSON format
+    assert isinstance(debug_configuration, dict)
+
+    # Test case 2: Check if the configuration file contains the required fields
+    required_fields = ["version", "configurations"]
+    for field in required_fields:
+        assert field in debug_configuration
+
+    # Test case 3: Check if the configuration file contains the correct number of configurations
+    assert len(debug_configuration["configurations"]) == 1
+
+    # Test case 4: Check if the configuration contains the required fields for a debug configuration
+    required_debug_fields = ["name", "type", "request", "program", "args", "stopAtEntry", "cwd", "externalConsole", "environment", "MIMode", "miDebuggerPath", "miDebuggerServerAddress", "setupCommands", "targetArchitecture"]
+    for field in required_debug_fields:
+        assert field in debug_configuration["configurations"][0]
+
+    # Test case 5: Check if the configuration contains the correct values for the fields
+    assert debug_configuration["configurations"][0]["name"] == "(gdb) 启动"
+    assert debug_configuration["configurations"][0]["type"] == "cppdbg"
+    assert debug_configuration["configurations"][0]["request"] == "launch"
+    assert debug_configuration["configurations"][0]["program"] == ""
+    assert debug_configuration["configurations"][0]["args"] == []
+    assert debug_configuration["configurations"][0]["stopAtEntry"] == True
+    assert debug_configuration["configurations"][0]["cwd"] == "${workspaceRoot}"
+    assert debug_configuration["configurations"][0]["externalConsole"] == True
+    assert debug_configuration["configurations"][0]["environment"] == []
+    assert debug_configuration["configurations"][0]["MIMode"] == "gdb"
+    assert debug_configuration["configurations"][0]["miDebuggerPath"] == ""
+    assert debug_configuration["configurations"][0]["miDebuggerServerAddress"] == ""
+    assert debug_configuration["configurations"][0]["targetArchitecture"] == "mips"
+
+    # Test case 6: Check if the setupCommands contain the correct commands
+    setup_commands = debug_configuration["configurations"][0]["setupCommands"]
+    assert len(setup_commands) == 7
+    assert setup_commands[0]["description"] == "endlian little"
+    assert setup_commands[0]["text"] == "set endian little"
+    assert setup_commands[0]["ignoreFailures"] == False
+    assert setup_commands[1]["description"] == "connect to target"
+    assert setup_commands[1]["text"] == "target remote 50.50.1.95:50000"
+    assert setup_commands[1]["ignoreFailures"] == False
+    assert setup_commands[2]["description"] == "monitor reset"
+    assert setup_commands[2]["text"] == "monitor reset"
+    assert setup_commands[2]["ignoreFailures"] == False
+    assert setup_commands[3]["description"] == "monitor halt"
+    assert setup_commands[3]["text"] == "monitor halt"
+    assert setup_commands[3]["ignoreFailures"] == False
+    assert setup_commands[4]["description"] == "file"
+    assert setup_commands[4]["text"] == "-file-exec-and-symbols \"\""
+    assert setup_commands[4]["ignoreFailures"] == False
+    assert setup_commands[5]["description"] == "load file"
+    assert setup_commands[5]["text"] == "load"
+    assert setup_commands[5]["ignoreFailures"] == False
+    assert setup_commands[6]["description"] == "break main"
+    assert setup_commands[6]["text"] == "break main"
+    assert setup_commands[6]["ignoreFailures"] == False
+
+    print("All test cases pass")
+
+# Load the debug configuration file
+with open(os.path.join(os.path.dirname(__file__), "launch.json"), "r") as file:
+    debug_configuration = json.load(file)
+
+# Run the test cases
+test_debug_configuration()
