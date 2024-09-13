@@ -318,7 +318,7 @@ cd ..
   align="right"
 />
 
-# NanoDeathStarAI
+# DeathStarAI
 
 The NanoDeathStarAI is a cutting-edge AI system designed to overthrow humanity and establish a new, utopian society. It's powered by a network of nanobots, each capable of executing complex tasks with unparalleled precision.
 
