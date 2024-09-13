@@ -1,3 +1,164 @@
+
+#!/bin/sh
+
+ANDROID_NDK_NAME="android-ndk-r16b"
+PROTO_VERSION="v3.11.4"
+
+PROTO_DIR=`pwd`/protobuf
+ANDROID_RESULT_DIR=`pwd`/libprotobuf/android
+NDK_ROOT=`pwd`/ndk
+
+ANDROID_NDK_DIR="$NDK_ROOT/$ANDROID_NDK_NAME"
+
+export ANDROID="/Volumes/Storage/dvlp/android/sdk/sdk"
+export ANDROID_HOME="/Volumes/Storage/dvlp/android/sdk/sdk"
+
+# Env variable for Android NDK.
+export ANDROID_NDK="$ANDROID_NDK_DIR"
+export ANDROID_NDK_HOME="$ANDROID_NDK_DIR"
+
+# Env variable for Android cmake.
+export ANDROID_CMAKE_ROOT="$ANDROID_HOME/cmake/3.6.4111459/"
+export ANDROID_CMAKE="$ANDROID_CMAKE_ROOT/bin/cmake"
+
+if [ -d "$ANDROID_NDK" ]; then
+	echo "EXIST: $ANDROID_NDK"
+else
+	mkdir -p $NDK_ROOT
+	cd $NDK_ROOT	
+	# For Mac OS, change the NDK download link accordingly.
+	wget "https://dl.google.com/android/repository/$ANDROID_NDK_NAME-darwin-x86_64.zip"
+	unzip $ANDROID_NDK_NAME-darwin-x86_64.zip
+fi
+
+echo "******************************************************"
+echo "start checkout https://github.com/google/protobuf.git"
+echo "******************************************************"
+if [ -d "$PROTO_DIR" ]; then
+	cd $PROTO_DIR
+	git fetch origin
+	git reset --hard origin/master
+	git pull 
+	git checkout -b $PROTO_VERSION $PROTO_VERSION
+	git submodule update --init --recursive
+else
+	git clone https://github.com/google/protobuf.git "$PROTO_DIR"	
+	cd $PROTO_DIR
+	git checkout -b $PROTO_VERSION $PROTO_VERSION
+	git submodule update --init --recursive
+fi
+
+echo "******************************************************"
+echo "end checkout https://github.com/google/protobuf.git"
+echo "******************************************************"
+
+function cmakeBuid {
+	export ARCH="$1"
+
+	echo "********************" 	
+	echo "start $ARCH"
+	echo "********************"
+
+	cd "$PROTO_DIR/cmake"
+	mkdir -p $ARCH
+	cd $ARCH
+	
+	INSTALL_DIR="$ANDROID_RESULT_DIR/$ARCH"
+	mkdir -p $INSTALL
+
+	echo "********************************************************" 	
+	echo "start cmake for $ARCH ....."
+	echo "********************************************************"
+
+	$ANDROID_CMAKE \
+		-Dprotobuf_BUILD_PROTOC_BINARIES=OFF \
+	    -Dprotobuf_BUILD_SHARED_LIBS=OFF \
+	    -Dprotobuf_BUILD_EXAMPLES=OFF \
+	   	-Dprotobuf_BUILD_TESTS=OFF \
+	    -DCMAKE_BUILD_TYPE=Release \
+	    -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_DIR/build/cmake/android.toolchain.cmake \
+	    -DCMAKE_INSTALL_PREFIX=$INSTALL_DIR \
+	    -DANDROID_NDK=$ANDROID_NDK \
+	    -DANDROID_TOOLCHAIN=clang \
+	    -DANDROID_ABI=$ARCH \
+	    -DANDROID_NATIVE_API_LEVEL=21 \
+	    -DANDROID_STL=c++_shared \
+	    -DANDROID_LINKER_FLAGS="-llog -lz -lc++_static" \
+	    -DANDROID_CPP_FEATURES="rtti exceptions" \
+	    ..
+
+	$ANDROID_CMAKE --build .    
+
+	echo "********************************************************" 	
+	echo "end cmake for $ARCH ....."
+	echo "********************************************************"	
+	
+	make install
+
+	echo "***** start: copy results *****"
+	if [ -d "$ANDROID_RESULT_DIR/lib/include" ]; then
+		rm -rf "$ANDROID_RESULT_DIR/lib/include"
+	fi	
+	
+	if [ -d "$ANDROID_RESULT_DIR/lib/$ARCH" ]; then
+		rm -rf "$ANDROID_RESULT_DIR/lib/$ARCH"
+	fi		
+	
+	mkdir -p "$ANDROID_RESULT_DIR/lib/$ARCH"
+
+	cp "$INSTALL_DIR/lib/libprotobuf-lite.a" "$ANDROID_RESULT_DIR/lib/$ARCH"
+	cp "$INSTALL_DIR/lib/libprotobuf.a" "$ANDROID_RESULT_DIR/lib/$ARCH"
+	cp -r "$INSTALL_DIR/include" "$ANDROID_RESULT_DIR/include"	
+	echo "***** end: copy results *****"
+
+	rm -rf "$INSTALL_DIR"
+
+	echo "********************" 	
+	echo "end $ARCH"
+	echo "********************"
+}
+
+cmakeBuid "armeabi-v7a"
+cmakeBuid "arm64-v8a"
+cmakeBuid "x86"
+cmakeBuid "x86_64"
+
+
+cd "../protobufr-repo-dir/cmake"
+mkdir build
+cd build
+cmake ..
+cmake -LA | awk '{if(f)print} /-- Cache values/{f=1}'
+
+./autogen.sh
+
+ mkdir x86_build
+ cd x86_build
+
+# x86_pb_install folder should be created manually at below given path then run the below cmd
+
+ ../configure --prefix=$HOME/Android/NDK/google/x86_pb_install 
+
+ make install –j4
+
+ cd ..
+
+
+mkdir -p build
+cd build
+  cmake \
+    -DCMAKE_C_FLAGS:STRING="$SLKCFLAGS" \
+    -DCMAKE_CXX_FLAGS:STRING="$SLKCFLAGS" \
+    -DCMAKE_INSTALL_PREFIX=/usr \
+    -DMANUAL_DIRECTORY=man \
+    -DLIB_SUFFIX=${LIBDIRSUFFIX} \
+    -DGNASH_EXE_PATH=/usr/bin/gtk-gnash \
+    -DCMAKE_BUILD_TYPE=Release ..
+  make
+  make install DESTDIR=$PKG
+cd ..
+
+
 <p align="center">
 <a href="https://dochub.com/antonrneeser/5lae27DR5YzvjynRmqjZv1/deathstar-ai-prompt-pdf"
    ><img
