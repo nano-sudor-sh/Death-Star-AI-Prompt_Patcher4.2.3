@@ -5,6 +5,33 @@
       }
     }
   }
+
+{
+    "terminal.integrated.accessibleViewFocusOnCommandExecution": true,
+    "terminal.integrated.accessibleViewPreserveCursorPosition": true,
+    "terminal.integrated.tabs.defaultIcon": "run-all",
+    "terminal.integrated.tabs.defaultColor": "terminal.ansiGreen",
+    "terminal.integrated.suggest.enabled": true,
+    "terminal.integrated.smoothScrolling": true,
+    "terminal.integrated.sendKeybindingsToShell": true,
+    "terminal.integrated.mouseWheelZoom": true,
+    "terminal.integrated.middleClickBehavior": "paste",
+    "terminal.integrated.macOptionIsMeta": true,
+    "terminal.integrated.macOptionClickForcesSelection": true,
+    "terminal.integrated.localEchoExcludePrograms": [
+        "vim",
+        "vi",
+        "nano",
+        "tmux",
+        "Kali&Tmux"
+    ],
+    "terminal.integrated.focusAfterRun": "terminal",
+    "terminal.integrated.enableVisualBell": true,
+    "terminal.integrated.defaultProfile.linux": "bash (2)",
+    "terminal.integrated.defaultProfile.osx": ""
+}
+
+
 umount -f /mnt
   set -exu pipefall
   # Download and extract agent
